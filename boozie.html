@@ -18,39 +18,29 @@
       var mouseX = 0;
       var mouseY = 0;
 
-      // camera takes 4 args: field of view, aspect ratio, near and far clipping plane
       var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000)
       
       var renderer = new THREE.WebGLRenderer();
-      // set the size at which we want renderer to render our app
       renderer.setSize( window.innerWidth, window.innerHeight ); 
-      // add the renderer element to our HTML document. This is a <canvas> element the renderer uses to display the scene to us
       document.body.appendChild( renderer.domElement );
 
-      // object that contains all the points (vertices) and fill (faces) of the cube
-      // var geometry = new THREE.CubeGeometry(5,1,1); 
       var geometry = new THREE.SphereGeometry(2,10,10,10); 
 
-      // a material to color the cube in hex
-      // all materials take an object of properties which will be applied to them
       var material = new THREE.MeshBasicMaterial( { color: 0x00888 } ); 
       var secondMaterial = new THREE.MeshBasicMaterial( { color: 0x00fff } ); 
       var thirdMaterial = new THREE.MeshBasicMaterial( { color: 0x0100f } ); 
       var fourthMaterial = new THREE.MeshBasicMaterial( { color: 0x01444 } ); 
       
-      // mesh is an object that takes a geometry, and applies a material to it
       var cube = new THREE.Mesh( geometry, material );
       var secondCube = new THREE.Mesh( geometry, secondMaterial );
       var thirdCube = new THREE.Mesh( geometry, thirdMaterial );
       var fourthCube = new THREE.Mesh( geometry, fourthMaterial );
 
-      // By default, when we call scene.add(), the thing we add will be added to the coordinates (0,0,0)
       scene.add( cube ); 
       scene.add( secondCube ); 
       scene.add( thirdCube ); 
       scene.add( fourthCube ); 
 
-      // This would cause both the camera and the cube to be inside each other. To avoid this, we simply move the camera out a bit
       camera.position.z = 4;
 
       var windowHalfX = window.innerWidth / 2;
@@ -67,11 +57,7 @@
 
       document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-      // This creates a loop that causes the renderer to draw the scene 60 times per second
-      // We use requestAnimationFrame instead of setInterval because requestAnimationFrame has a number of advantages. Perhaps the most important one is that it pauses when the user navigates to another browser tab, hence not wasting their precious processing power and battery life   
       function render() { 
-        // This will be run every frame (60 times per second), and give the cube a nice rotation animation
-        // Anything you want to move or change while the game / app is running has to go through the render loop
         requestAnimationFrame(render); 
         cube.rotation.x += 0.001; cube.rotation.y += 0.001;
         secondCube.rotation.x -= 0.002; secondCube.rotation.y -= 0.002;
