@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <title>Cube</title>
+    <!-- From tutorial: http://12devsofxmas.co.uk/2012/01/webgl-and-three-js/ -->
+    <style>
+      canvas {
+        width: 100%;
+        height: 100%
+      }
+    body {
+      background-color: black;
+    }
+    </style>
+  </head>
+  <body>
+    <script src="../lib/three.min.js"></script>
+    <script type="text/javascript">
+      // Shared objects we'll instantiate later.
+      var container, camera, scene, renderer, sphere, origin = new THREE.Vector3(0,0,0);
+      var intensity = 0xffffff;
+      var mouseX, mouseY;
+
+      // Initialise
+      init();
+
+      // Then animate the scene.
+      animate();
+
+      function init() {
+          // Create a new scene
+          scene = new THREE.Scene();
+
+          // Create a new camera, don't worry about the details of this for now.
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+          // Move the camera to (0, 0, 600)
+          camera.position.set(0, 0, 1000);
+          // Point the camera towards the origin
+          camera.lookAt(origin);
+          // Add the camera to the scene
+          scene.add(camera);
+
+          // Create a new directional light, full intensity
+          // Try setting it to 0x888888 and see what happens!
+          light = new THREE.DirectionalLight(intensity);
+          // The light direction is given by a vector, we're going to manipulate
+          // the position at runtime by moving the mouse.
+          light.position.set(0, 0, 0).normalize();
+          // Add the light to the scene, try removing it!
+          scene.add(light);
+
+          // Notice the specular effect that the pointlight has, play with these numbers!
+          // Note how the lights combine
+          var pointLight = new THREE.PointLight(intensity);
+          pointLight.position.set(100, 100, 100);
+          scene.add(pointLight);
+
+          // Create a new geometry object, here we're using a built in sphere generator
+          var geometry = new THREE.TorusKnotGeometry(150, 32);
+          // Use a flat shaded material, try using Basic!
+          var material = new THREE.MeshLambertMaterial({color: 0xff00ff, wireframe: true });
+
+          // Create the mesh from the geometry and material
+          sphere = new THREE.Mesh(geometry, material);
+          // Add the cube to the scene
+          scene.add(sphere);
+
+          // Create two more spheres and reposition then
+          material = new THREE.MeshLambertMaterial({color: 0xff0000});
+          sphere = new THREE.Mesh(geometry, material);
+          sphere.position.x = -325;
+          sphere.position.y = 100;
+          sphere.position.z = 325;
+          scene.add(sphere);
+
+          material = new THREE.MeshLambertMaterial({color: 0x000ff});
+          sphere = new THREE.Mesh(geometry, material);
+          sphere.position.x = 325;
+          sphere.position.y = -100;
+          sphere.position.z = -325;
+          scene.add(sphere);
+
+          // Create a new WebGL renderer
+          renderer = new THREE.WebGLRenderer();
+          // Set the window size
+          renderer.setSize(window.innerWidth, window.innerHeight);
+
+          // three.js creates a canvas element for us, we need to append it to the dom.
+          document.body.appendChild(renderer.domElement);
+
+          // Track the mouse position, relative to the middle of the screen
+          document.addEventListener( 'mousemove', function(e) {
+              mouseX = e.clientX - window.innerWidth / 2;
+              mouseY = window.innerHeight / 2 - e.clientY;
+          }, false );
+      }
+
+      function animate() {
+          requestAnimationFrame(animate);
+          render();
+      }
+
+      function render() {
+          // move the light position to track the mouse, remember this must be
+          // a unit vector!
+          light.position.set(mouseX, mouseY, 100).normalize();
+          // Update the scene, for the current camera position
+          renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>

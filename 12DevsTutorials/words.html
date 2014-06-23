@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Shalom</title>
+    <!-- From tutorial: http://12devsofxmas.co.uk/2012/01/webgl-and-three-js/ -->
+    <style>
+      canvas {
+        width: 100%;
+        height: 100%
+      }
+    body {
+      background-color: black;
+    }
+    </style>
+  </head>
+  <body>
+    <script src="../lib/three.min.js"></script>
+    <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
+    <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_bold.typeface.js"></script>
+    <script type="text/javascript">
+      // Shared objects we'll instantiate later.
+      var container, camera, scene, renderer, origin = new THREE.Vector3(0,0,0);
+      var mouseX, mouseY;
+      var intensity = 0xffffff;
+      var t = 0;
+
+      // Initialise
+      init();
+
+      // Then animate the scene.
+      animate();
+
+      function init() {
+          // Create a new scene
+          scene = new THREE.Scene();
+
+          // Create a new camera, don't worry about the details of this for now.
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+          // Move the camera
+          camera.position.set(300, 300, 800);
+          // Point the camera towards the origin
+          camera.lookAt(origin);
+          // Add the camera to the scene
+          scene.add(camera);
+
+          // Create a new directional light, full intensity
+          // Try setting it to 0x888888 and see what happens!
+          light = new THREE.DirectionalLight(intensity);
+          // Light toward the origin
+          light.position.set(0, 1, 1).normalize();
+          // Add the light to the scene, try removing it!
+          scene.add(light);
+
+          // We'll add a pointlight that's going to be moved around
+          // every frame.  Let's use a yellowey colour.
+          light = new THREE.PointLight(0x886600);
+          light.position.set(0, 100, 100);
+          scene.add(light);
+
+          // Create a new text geometry object
+          var geometry = new THREE.TextGeometry(
+              "Shalom", {
+                  // size of the text
+                  size: 200,
+                  // depth of the text
+                  height: 50,
+                  // controls the 'blockiness' of the curves
+                  curveSegments: 1,
+
+                  font: "helvetiker",
+                  weight: "bold",
+                  style: "normal"
+              }
+          );
+
+          var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+
+          // Create the mesh from the geometry and material
+          text = new THREE.Mesh(geometry, material);
+          // move the text toward the centre
+          text.position.x = -550;
+
+          // Add the text to the scene
+          scene.add(text);
+
+          // Create a new WebGL renderer
+          renderer = new THREE.WebGLRenderer();
+          // Set the window size
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setClearColor(0x000000, 1.0);
+
+          // three.js creates a canvas element for us, we need to append it to the dom.
+          document.body.appendChild(renderer.domElement);
+          document.addEventListener( 'mousemove', function(e) {
+              mouseX = e.clientX - window.innerWidth / 2;
+              mouseY = window.innerHeight / 2 - e.clientY;
+          }, false );
+
+      }
+
+      function animate() {
+          requestAnimationFrame(animate);
+          render();
+      }
+
+      function render() {
+          // Increment the counter
+          t += 0.025;
+
+          // Sine varies from -1 to 1, this has the effect of moving the
+          // light back and forth between x = -400 and +400
+          // light.position.x = 400 * Math.sin(t);
+          light.position.x = mouseX;
+          light.position.y = mouseY;
+          // light.position.z = mouseY;
+
+          // Update the scene, for the current camera position
+          renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>

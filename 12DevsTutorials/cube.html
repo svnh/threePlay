@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Cube</title>
+    <!-- From tutorial: http://12devsofxmas.co.uk/2012/01/webgl-and-three-js/ -->
+    <style>
+      canvas {
+        width: 100%;
+        height: 100%
+      }
+    body {
+      background-color: black;
+    }
+    </style>
+  </head>
+  <body>
+    <script src="../lib/three.min.js"></script>
+    <script type="text/javascript">
+      // Shared objects we'll instantiate later.
+      var container, camera, scene, renderer, cube, origin = new THREE.Vector3(0,0,0);
+
+      // Initialise
+      init();
+
+      // Then animate the scene.
+      animate();
+
+      function init() {
+          // Create a new scene
+          scene = new THREE.Scene();
+
+          // Create a new camera, don't worry about the details of this for now.
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+          // Move the camera to (0, 0, 600)
+          camera.position.set(0, 0, 600);
+          // Point the camera towards the origin
+          camera.lookAt(origin);
+          // Add the camera to the scene
+          scene.add(camera);
+
+          // Create a new geometry object, here we're using a built in cube generator
+          // We a 200x200x200 unit cube
+          var geometry = new THREE.CubeGeometry(200, 200, 200);
+          // Add a material that's affected by light, try using Basic!
+          var material = new THREE.MeshNormalMaterial();
+          // var material = new THREE.MeshBasicMaterial({color: 0xff0000});
+
+          // Create the mesh from the geometry and material
+          cube = new THREE.Mesh(geometry, material);
+          // Add the cube to the scene
+          scene.add(cube);
+
+          // Create a new WebGL renderer
+          renderer = new THREE.WebGLRenderer();
+          // Set the window size
+          renderer.setSize(window.innerWidth, window.innerHeight);
+
+          // three.js creates a canvas element for us, we need to append it to the dom.
+          document.body.appendChild(renderer.domElement);
+      }
+
+      function animate() {
+          requestAnimationFrame(animate);
+          render();
+      }
+
+      function render() {
+          // Try changing these!
+          cube.rotation.x = 0;
+          cube.rotation.z = 0;
+          // Angles are in radians, see the article.
+          cube.rotation.y += Math.PI / 180;
+
+          cube.position.x = 0;
+          cube.position.y = 0;
+          cube.position.z = 0;
+
+          cube.scale.z = 0.5;
+          cube.scale.y = 1.0;
+          cube.scale.x = 1.0;
+
+          // Update the scene, for the current camera position
+          renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>
